@@ -20,8 +20,8 @@ class RegisterView extends StatelessWidget {
             Provider.of<RegisterFormProvider>(context, listen: false);
 
         return Container(
-          margin: EdgeInsets.only(top: 5),
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          margin: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 370),
@@ -44,7 +44,7 @@ class RegisterView extends StatelessWidget {
                           icon: Icons.supervised_user_circle_sharp),
                     ),
 
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
 
                     // Email
                     TextFormField(
@@ -61,7 +61,7 @@ class RegisterView extends StatelessWidget {
                           icon: Icons.email_outlined),
                     ),
 
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
 
                     // Password
                     TextFormField(
@@ -83,7 +83,7 @@ class RegisterView extends StatelessWidget {
                           icon: Icons.lock_outline_rounded),
                     ),
 
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     CustomOutlinedButton(
                       onPressed: () {
                         registerFormProvider.validateForm();
@@ -91,7 +91,7 @@ class RegisterView extends StatelessWidget {
                       text: 'Crear cuenta',
                     ),
 
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     LinkText(
                       text: 'Ir al login',
                       onPressed: () {
