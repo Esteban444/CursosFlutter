@@ -10,7 +10,7 @@ class NotificationsService {
   static showSnackbarError( String message ) {
 
     final snackBar = new SnackBar(
-      backgroundColor: Colors.red.withOpacity(0.9),
+      backgroundColor: Color(0xff050A40),
       content: Text( message, style: TextStyle( color: Colors.white, fontSize: 20 ) )
     );
 
@@ -18,5 +18,15 @@ class NotificationsService {
 
   }
 
+   static showSnackbar( String message ) {
+
+    final snackBar = new SnackBar(
+      backgroundColor: Color(0xff050A40),
+      content: Text( message, style: TextStyle( color: Colors.white, fontSize: 20 ) )
+    );
+
+    messengerKey.currentState!.showSnackBar(snackBar);
+
+  }
 
 }

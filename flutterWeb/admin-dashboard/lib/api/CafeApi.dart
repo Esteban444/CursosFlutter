@@ -27,25 +27,49 @@ class CafeApi {
 
 
     } catch (e) {
-      print(e);
-      throw('Error en el GET');
+      throw('Error en el Get');
     }
   }
 
-    static Future post( String path, Map<String, dynamic> data ) async {
+  static Future post( String path, Map<String, dynamic> data ) async {
 
-      final formData = FormData.fromMap(data);
+    final formData = FormData.fromMap(data);
 
-      try {
+    try {
         
-        final resp = await _dio.post(path, data: formData );
-        return resp.data;
+      final resp = await _dio.post(path, data: formData );
+      return resp.data;
 
-      } catch (e) {
-        print(e);
-        throw('Error en el POST');
-      }
+    } catch (e) {
+      throw('Error en el Post');
     }
+  }
 
+  static Future put( String path, Map<String, dynamic> data ) async {
 
+    final formData = FormData.fromMap(data);
+
+    try {
+        
+      final resp = await _dio.put(path, data: formData );
+      return resp.data;
+
+    } catch (e) {
+      throw('Error en el Put');
+    }
+  }
+   
+   static Future delete( String path, Map<String, dynamic> data ) async {
+
+    final formData = FormData.fromMap(data);
+
+    try {
+        
+      final resp = await _dio.delete(path, data: formData );
+      return resp.data;
+
+    } catch (e) {
+      throw('Error en el Delete');
+    }
+  }
 }
