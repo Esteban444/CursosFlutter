@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:productosapp/screens/screens.dart';
 
 import 'package:productosapp/services/services.dart';
+
+import 'package:productosapp/models/models.dart';
 import 'package:productosapp/widgets/widgets.dart';
 
 
@@ -19,6 +21,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Productos'),
       ),
       body: ListView.builder(
@@ -37,12 +40,13 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon( Icons.add ),
         onPressed: () {
+          // guardar al crear un nuevo producto.
 
-         /* productsService.selectedProduct = new Product(
+          productsService.selectProduct = new Product(
             available: false, 
             name: '', 
             price: 0
-          );*/
+          );
           Navigator.pushNamed(context, 'product');
         },
       ),

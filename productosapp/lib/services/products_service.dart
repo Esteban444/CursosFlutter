@@ -1,6 +1,7 @@
 
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -15,8 +16,11 @@ class ProductsService extends ChangeNotifier {
   final List<Product> products = [];
   late Product selectProduct;
 
+  File? newPictureFile;
+
 
   bool isloading = true;
+  bool isSaving  = false;
 
   ProductsService() {
      this.loadProducts();
@@ -42,5 +46,83 @@ class ProductsService extends ChangeNotifier {
     notifyListeners();
 
     return this.products;
+  }
+
+  Future saveOrCreateProduct(Product product) async {
+    isSaving = true; 
+    notifyListeners();
+
+    if(product.id == null){
+      // Crear
+       await this.createProduct(product);
+    }else{
+      // actualizar
+      await this.updateProduct(product);
+    }
+
+
+    isSaving = false; 
+    notifyListeners();
+     
+     
+  }
+
+  Future<String> updateProduct(Product product) async {
+
+    final url = Uri.https(_baseUrl, 'Products/${product.id}.json');
+    final resp = await http.put(url, body: product.toJson());
+    final decodedData = resp.body;
+
+     final index = this.products.indexWhere((element) => element.id == product.id); // lineas para actualizar el producto en el formulario de productos.
+     this.products[index] = product; // esta tambien.
+
+    return product.id!;
+
+  }
+
+  Future<String> createProduct(Product product) async {
+
+    final url = Uri.https(_baseUrl, 'Products/.json');
+    final resp = await http.post(url, body: product.toJson());
+    final decodedData =  json.decode(resp.body);
+    
+    product.id = decodedData['name'];
+    this.products.add(product);
+
+    return product.id!;
+
+  }
+
+  void updateSelectProductImage( String path) { //para actualizar la imagen en formulario productos.
+
+   this.selectProduct.picture = path;
+   this.newPictureFile = File.fromUri(Uri(path: path));
+
+   notifyListeners();
+  }
+
+  // subir la imagen a Cloudinary
+  Future<String?>  uploadImage() async {
+
+    if(this.newPictureFile == null) return null;
+
+    this.isSaving = true;
+    notifyListeners();
+
+    final url = Uri.parse('https://api.cloudinary.com/v1_1/dqkxpcosq/image/upload?upload_preset=zhdq3gyv');
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', newPictureFile!.path);
+
+    imageUploadRequest.files.add(file);
+
+    final strenamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(strenamResponse);
+
+    this.newPictureFile = null;
+
+    final decodeData = json.decode( resp.body);
+    return decodeData['secure_url'];
   }
 }
