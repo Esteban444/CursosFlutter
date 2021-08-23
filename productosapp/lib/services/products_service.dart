@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:productosapp/models/models.dart';
 
-import 'package:http/http.dart' as http;
 
 class ProductsService extends ChangeNotifier {
 
@@ -15,6 +16,8 @@ class ProductsService extends ChangeNotifier {
 
   final List<Product> products = [];
   late Product selectProduct;
+
+  final storage = new FlutterSecureStorage(); // Para autorizacion de las peticiones en back.
 
   File? newPictureFile;
 
@@ -26,12 +29,17 @@ class ProductsService extends ChangeNotifier {
      this.loadProducts();
   }
   
+  // peticion http get
+
   Future<List<Product>> loadProducts() async {
 
     this.isloading = true;
     notifyListeners();
-
-    final url = Uri.https(_baseUrl, 'Products.json');
+     // la parte despues de products.json es para enviar token a las peticiones en firibase.
+     
+    final url = Uri.https(_baseUrl, 'Products.json', {
+      'auth': await storage.read(key: 'token') ?? ''
+    });
     final resp = await http.get(url);
 
     final Map<String, dynamic> productsMap = json.decode(resp.body);
@@ -69,7 +77,10 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> updateProduct(Product product) async {
 
-    final url = Uri.https(_baseUrl, 'Products/${product.id}.json');
+    final url = Uri.https(_baseUrl, 'Products/${product.id}.json', {
+      'auth': await storage.read(key: 'token') ?? ''
+    });
+
     final resp = await http.put(url, body: product.toJson());
     final decodedData = resp.body;
 
@@ -82,7 +93,10 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> createProduct(Product product) async {
 
-    final url = Uri.https(_baseUrl, 'Products/.json');
+    final url = Uri.https(_baseUrl, 'Products/.json', {
+      'auth': await storage.read(key: 'token') ?? ''
+    });
+
     final resp = await http.post(url, body: product.toJson());
     final decodedData =  json.decode(resp.body);
     
