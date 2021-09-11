@@ -23,20 +23,27 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            //Targetas principales
-            CardSwiper(movies: moviesProvider.onDisplayMovies),
-
-            //slider de peliculas
-            MoviSlider(
-              movies: moviesProvider.popularMovies, //populares
-              title: 'Populares', //opcional
-              onNextPage: () => moviesProvider
-                  .getPopularMovies(), // para el scroll horizontal
-            ),
-          ],
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              //Targetas principales
+              CardSwiper(movies: moviesProvider.onDisplayMovies),
+              SizedBox(
+                height: 10,
+              ),
+              //slider de peliculas
+              MoviSlider(
+                movies: moviesProvider.popularMovies, //populares
+                title: 'Populares', //opcional
+                onNextPage: () => moviesProvider
+                    .getPopularMovies(), // para el scroll horizontal
+              ),
+            ],
+          ),
         ),
       ),
     );
