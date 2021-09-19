@@ -8,6 +8,7 @@ import 'package:admin_dashboard/providers/auth_provider.dart';
 
 import 'package:admin_dashboard/ui/views/blank_view.dart';
 import 'package:admin_dashboard/ui/views/categories_view.dart';
+import 'package:admin_dashboard/ui/views/customer_views.dart';
 import 'package:admin_dashboard/ui/views/customers_view.dart';
 import 'package:admin_dashboard/ui/views/dashboard_view.dart';
 import 'package:admin_dashboard/ui/views/icons_view.dart';
@@ -67,5 +68,23 @@ class DashboardHandlers {
       return CustomersView();
     else
       return LoginView();
+  });
+
+  static Handler customer = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.customerRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      if (params['uid']?.first != null) {
+        return CustomerView(
+          uid: params['uid']!.first,
+        );
+      } else {
+        return CustomersView();
+      }
+    } else {
+      return LoginView();
+    }
   });
 }

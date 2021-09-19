@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:admin_dashboard/services/navigation_service.dart';
 import 'package:admin_dashboard/models/customer.dart';
 
 class CustomersDataSource extends DataTableSource {
@@ -24,7 +25,10 @@ class CustomersDataSource extends DataTableSource {
       DataCell(
         IconButton(
           icon: Icon(Icons.edit_outlined),
-          onPressed: () {},
+          onPressed: () {
+            NavigationService.replaceTo(
+                '/dashboard/customer/${customer.uid}'); // para navegar al usuario selecionado en la tabla.
+          },
         ),
       ),
     ]);

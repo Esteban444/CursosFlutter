@@ -7,6 +7,8 @@ import 'package:admin_dashboard/api/CafeApi.dart';
 class CustomersProvider extends ChangeNotifier {
   List<Customer> customers = [];
   bool isLoading = true;
+  bool ascending = true;
+  int? sortColumnIndex;
 
   CustomersProvider() {
     this.getPaginatedCustomers();
@@ -23,60 +25,38 @@ class CustomersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /*Future newCategory( String name) async {
-    
-    final data = {
-      'nombre': name
-    };
+  Future<Customer?> getCustomerById(String uid) async {
+    try {
+      final response = await CafeApi.httpGet('/usuarios/$uid');
 
-    try{
-       final json = await CafeApi.post('/categorias', data);
-       final newCategory = Categoria.fromMap(json);
-       categorias.add(newCategory);
-
-       notifyListeners();
-    }catch (e) {
-       throw 'Error al crear la categoria.';
+      final customer = Customer.fromMap(response);
+      return customer;
+    } catch (e) {
+      return null;
     }
   }
 
-  Future updateCategory( String id, String name) async {
-    
-    final data = {
-      'nombre': name
-    };
+  // Funcion para organizar las columnas de la tabla
+  void sort<T>(Comparable<T> Function(Customer customer) getField) {
+    customers.sort((a, b) {
+      final aValue = getField(a);
+      final bValue = getField(b);
 
-    try{
-     await CafeApi.put('/categorias/$id', data);
-
-      this.categorias = this.categorias.map(
-         (category) {
-           if(category.id != id) return category;
-
-           category.nombre = name;
-           return category;
-         }
-       ).toList();
-
-      notifyListeners();
-
-    }catch (e) {
-       throw 'Eror al actulizar la categoria';
-    }
+      return ascending
+          ? Comparable.compare(aValue, bValue)
+          : Comparable.compare(bValue, aValue);
+    });
+    ascending = !ascending;
+    notifyListeners();
   }
 
-  Future deleteCategory( String id) async {
-    
-
-    try{
-     await CafeApi.delete('/categorias/$id', {});
-
-      categorias.removeWhere((categoria) => categoria.id == id);
-
-      notifyListeners();
-
-    }catch (e) {
-       throw 'Error al eliminar la categoria.';
-    }
-  }*/
+  void refreshCustomers(Customer newCustomer) {
+    this.customers = this.customers.map((customer) {
+      if (customer.uid == newCustomer.uid) {
+        customer = newCustomer;
+      }
+      return customer;
+    }).toList();
+    notifyListeners();
+  }
 }
