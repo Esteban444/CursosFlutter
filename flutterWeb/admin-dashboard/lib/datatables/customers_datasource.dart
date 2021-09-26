@@ -12,12 +12,25 @@ class CustomersDataSource extends DataTableSource {
   DataRow getRow(int index) {
     final Customer customer = customers[index];
 
-    final image =
-        Image(image: AssetImage('assets/no-image.jpg'), width: 35, height: 35);
+    /*final image =
+        Image(image: AssetImage('assets/no-image.jpg'), width: 35, height: 35);*/
+
+    final img = (customer.img == null)
+        ? Image(
+            image: AssetImage('no-image.jpg'),
+            width: 35,
+            height: 35,
+          )
+        : FadeInImage.assetNetwork(
+            placeholder: 'loader.gif',
+            image: customer.img!,
+            width: 35,
+            height: 35,
+          );
 
     return DataRow.byIndex(index: index, cells: [
       DataCell(ClipOval(
-        child: image,
+        child: img,
       )),
       DataCell(Text(customer.nombre)),
       DataCell(Text(customer.correo)),

@@ -1,5 +1,7 @@
-import 'package:admin_dashboard/api/CafeApi.dart';
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
+import 'package:admin_dashboard/api/CafeApi.dart';
 
 import 'package:admin_dashboard/models/customer.dart';
 
@@ -52,6 +54,18 @@ class CustomerFormProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<Customer> uploadImage(String path, Uint8List bytes) async {
+    try {
+      final resp = await CafeApi.uploadFile(path, bytes);
+      customer = Customer.fromMap(resp);
+      notifyListeners();
+
+      return customer!;
+    } catch (e) {
+      throw 'Error en profile provider';
     }
   }
 }
